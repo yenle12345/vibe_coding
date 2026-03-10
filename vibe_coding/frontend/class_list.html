@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Class List</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>Class List</h1>
+
+<a href="/add_class">
+<button>Add Class</button>
+</a>
+
+<table border="1">
+
+<tr>
+<th>Class ID</th>
+<th>Class Name</th>
+<th>Advisor</th>
+</tr>
+
+{% for c in classes %}
+<tr>
+<td>{{c.class_id}}</td>
+<td>{{c.class_name}}</td>
+<td>{{c.advisor}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
