@@ -1,80 +1,138 @@
-body{
-    font-family: Arial, sans-serif;
-    background: #f4f6f9;
-    margin: 0;
-    padding: 40px;
+/* ===== Reset ===== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
+
+/* ===== Body ===== */
+
+body{
+    background:#eef2f7;
+    padding:40px;
+}
+
+/* ===== Title ===== */
 
 h1{
-    text-align: center;
-    margin-bottom: 20px;
+    text-align:center;
+    margin-bottom:30px;
+    color:#2c3e50;
 }
 
-.container{
-    width: 70%;
-    margin: auto;
-}
-
-table{
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-th, td{
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-
-th{
-    background: #007bff;
-    color: white;
-}
-
-tr:nth-child(even){
-    background: #f2f2f2;
-}
-
-.btn{
-    display: inline-block;
-    padding: 10px 15px;
-    background: #28a745;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-bottom: 15px;
-}
-
-.btn:hover{
-    background: #218838;
-}
-
-.form-box{
-    width: 300px;
-    margin: auto;
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-input{
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-}
+/* ===== Buttons ===== */
 
 button{
-    width: 100%;
-    padding: 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
+    padding:6px 14px;
+    border:none;
+    border-radius:6px;
+    font-size:13px;
+    cursor:pointer;
+    transition:0.2s;
 }
 
-button:hover{
-    background: #0056b3;
+/* Add buttons */
+
+a button{
+    background:#2563eb;
+    color:white;
+}
+
+a button:hover{
+    background:#1e4ed8;
+}
+
+/* Update button */
+
+button[type="submit"]{
+    background:#16a34a;
+    color:white;
+}
+
+button[type="submit"]:hover{
+    background:#15803d;
+}
+
+/* Delete button */
+
+a[href*="delete"] button{
+    background:#dc2626;
+}
+
+a[href*="delete"] button:hover{
+    background:#b91c1c;
+}
+
+/* ===== Table ===== */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Table header */
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:12px;
+    font-size:14px;
+}
+
+/* Table rows */
+
+td{
+    padding:10px;
+    text-align:center;
+}
+
+/* Row hover */
+
+tr:hover{
+    background:#f1f5f9;
+}
+
+/* ===== Inputs ===== */
+
+input, select{
+    padding:6px 8px;
+    border:1px solid #d1d5db;
+    border-radius:5px;
+    width:100%;
+    font-size:13px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#2563eb;
+}
+
+/* ===== Search box ===== */
+
+input[name="search"]{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+/* ===== Export section ===== */
+
+.export-box{
+    margin-top:20px;
+}
+
+/* ===== Statistics ===== */
+
+h2{
+    margin-top:30px;
+    margin-bottom:10px;
+}
+
+ul{
+    padding-left:20px;
 }

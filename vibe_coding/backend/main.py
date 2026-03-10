@@ -1,8 +1,11 @@
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, Request, Form, Query
+from fastapi.responses import RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import func
 from fastapi.staticfiles import StaticFiles
+import csv
+import io
 
 from .database import SessionLocal, engine
 from . import models
@@ -23,17 +26,39 @@ def get_db():
 
 
 @app.get("/")
-def home(request: Request):
+def home(request: Request, search: str = Query(None)):
     db = SessionLocal()
-    students = db.query(models.Student).options(
+    if search:
+        students = db.query(models.Student).options(
+        joinedload(models.Student.classroom)
+    ).filter(
+        models.Student.name.contains(search)
+    ).all()
+    else:
+        students = db.query(models.Student).options(
         joinedload(models.Student.classroom)
     ).all()
+    
+    total_students = db.query(func.count(models.Student.student_id)).scalar()
+
+    avg_gpa = db.query(func.avg(models.Student.gpa)).scalar()
+
+    major_stats = db.query(
+        models.Student.major,
+        func.count(models.Student.student_id)
+    ).group_by(models.Student.major).all()
+
     classes = db.query(models.Class).all()
+
     db.close()
 
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "students": students, "classes": classes}
+        {"request": request, "students": students,
+          "classes": classes, "search": search,
+          'total_students': total_students,
+          'avg_gpa': avg_gpa,
+          'major_stats': major_stats}
     )
 
 
@@ -140,12 +165,14 @@ def class_list(request: Request):
         "class_list.html",
         {"request": request, "classes": classes}
     )
+
 @app.get("/add_class")
 def add_class_page(request: Request):
     return templates.TemplateResponse(
         "add_class.html",
         {"request": request}
     )
+
 @app.post("/add_class")
 def add_class(
         class_id: str = Form(...),
@@ -165,3 +192,41 @@ def add_class(
     db.commit()
 
     return RedirectResponse("/classes", status_code=303)
+
+@app.get("/export")
+def export_csv(filename: str = Query("students")):
+    db = SessionLocal()
+
+    students = db.query(models.Student).all()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow([
+        "Student ID",
+        "Name",
+        "Birth Year",
+        "Major",
+        "GPA",
+        "Class ID"
+    ])
+    for s in students:
+        writer.writerow([
+            s.student_id,
+            s.name,
+            s.birth_year,
+            s.major,
+            s.gpa,
+            s.class_id
+        ])
+
+    csv_data = output.getvalue().encode("utf-8-sig")
+
+    db.close()
+
+    return StreamingResponse(
+        iter([csv_data]),
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": f"attachment; filename={filename}.csv"
+        }
+    )
